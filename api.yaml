@@ -1,0 +1,1062 @@
+openapi: 3.0.0
+info:
+  title: Electronic registry
+  version: '1.0'
+  description: Test api
+  contact:
+    name: Aitor Pérez
+    email: tao@t-systems.com
+  license:
+    name: Commercial
+servers:
+  - url: 'http://localhost:3000/api/v1'
+tags:
+  - name: drafts
+    description: Draft operations
+  - name: fields
+    description: Field operations
+  - name: documents
+    description: Document operations
+paths:
+  '/solicitud/{pid}/variables':
+    parameters:
+      - schema:
+          type: string
+        name: pid
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      operationId: get-solicitud-pid-fields
+      description: Endpoint para el mantenimiento de las variables de una solicitud
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FieldGroup'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters: []
+  '/solicitud/{pid}/documents':
+    parameters:
+      - schema:
+          type: string
+        name: pid
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocumentGroup'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Service Unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      operationId: get-solicitud-pid-documents
+      description: Endpoint para el mantenimiento de los documentos de una solicitud
+  '/solicitud/{pid}':
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Solicitud'
+      operationId: get-solicitud
+    parameters:
+      - schema:
+          type: string
+        name: pid
+        in: path
+        required: true
+  '/accessSearch/{dboid}':
+    parameters:
+      - schema:
+          type: string
+        name: dboid
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Access'
+      operationId: accessSearch
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: access
+  /bdtUtils:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/Country'
+                    - $ref: '#/components/schemas/Province'
+                    - $ref: '#/components/schemas/Municipality'
+            application/xml:
+              schema:
+                type: object
+                properties:
+                  country:
+                    $ref: '#/components/schemas/Country'
+                  province:
+                    $ref: '#/components/schemas/Province'
+                  municipality:
+                    $ref: '#/components/schemas/Municipality'
+      operationId: get-bdtUtils
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: country
+        - schema:
+            type: string
+          in: query
+          name: province
+        - schema:
+            type: string
+          in: query
+          name: municipality
+  '/addressSearchFromAccess/{access}':
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+      operationId: addressSearch
+    parameters:
+      - schema:
+          type: string
+        name: access
+        in: path
+        required: true
+  '/addressSearchFromMunicipality/{municipality}':
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+      operationId: addressSearchFromMunicipality
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: street
+        - schema:
+            type: string
+          in: query
+          name: num
+        - schema:
+            type: string
+          in: query
+          name: stair
+        - schema:
+            type: string
+          in: query
+          name: block
+        - schema:
+            type: string
+          in: query
+          name: door
+        - schema:
+            type: string
+          in: query
+          name: zipcode
+    parameters:
+      - schema:
+          type: string
+        name: municipality
+        in: path
+        required: true
+  /bdtConstants:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressConstants'
+      operationId: get-bdtConstants
+      description: ''
+      parameters: []
+  /getPerson:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  person:
+                    $ref: '#/components/schemas/Person'
+      operationId: get-getPerson
+      parameters: []
+  /processRequest:
+    post:
+      summary: ''
+      operationId: post-processRequest
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreationResponse'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreationRequest'
+    get:
+      summary: ''
+      operationId: get-processRequest
+      responses:
+        '200':
+          description: OK
+components:
+  schemas:
+    Field:
+      title: Field
+      type: object
+      x-examples: {}
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        help:
+          type: string
+        required:
+          type: boolean
+        style:
+          type: object
+          properties:
+            break:
+              type: boolean
+              description: 'If true, the field must be rendered on a new line'
+            size:
+              type: string
+              enum:
+                - regular
+                - double
+                - full
+        regexp:
+          type: string
+        length:
+          type: integer
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              label:
+                type: string
+      required:
+        - id
+        - title
+    Document:
+      title: Document
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        required:
+          type: boolean
+        reusable:
+          type: boolean
+        signature:
+          type: boolean
+        multiple:
+          type: boolean
+        accepts:
+          type: string
+        maxsize:
+          type: integer
+      required:
+        - id
+        - title
+    FieldGroup:
+      title: FieldGroup
+      type: object
+      description: ''
+      properties:
+        id:
+          type: string
+        fields:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/ObjectField'
+              - $ref: '#/components/schemas/TextField'
+              - $ref: '#/components/schemas/LongTextField'
+              - $ref: '#/components/schemas/DateField'
+              - $ref: '#/components/schemas/HourField'
+              - $ref: '#/components/schemas/NumberField'
+              - $ref: '#/components/schemas/BooleanField'
+        title:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum:
+            - var
+            - dpa
+        groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldGroup'
+      required:
+        - id
+        - fields
+        - title
+    DocumentGroup:
+      title: DocumentGroup
+      type: object
+      properties:
+        id:
+          type: string
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Document'
+        title:
+          type: string
+        description:
+          type: string
+        parent:
+          type: string
+      required:
+        - id
+        - documents
+        - title
+    ObjectField:
+      title: ObjectField
+      allOf:
+        - $ref: '#/components/schemas/Field'
+        - type: object
+          description: Specific properties of object fields
+          properties:
+            type:
+              type: string
+              enum:
+                - person
+                - address
+                - administrative-file
+                - administrative-unit
+                - bank-account
+                - census
+                - plot
+          required:
+            - type
+      description: Specific properties of object fields
+    TextField:
+      title: TextField
+      allOf:
+        - $ref: '#/components/schemas/Field'
+        - type: object
+          description: Specific properties of text fields
+          properties:
+            type:
+              type: string
+              enum:
+                - text
+            default:
+              type: string
+            regex:
+              type: string
+            length:
+              type: integer
+              minimum: 1
+              maximum: 255
+            format:
+              type: string
+              enum:
+                - none
+                - combo
+                - radio
+      description: Specific properties of text fields
+    LongTextField:
+      title: LongTextField
+      allOf:
+        - $ref: '#/components/schemas/Field'
+        - type: object
+          description: Specific properties of long text fields
+          properties:
+            type:
+              type: string
+              enum:
+                - textarea
+          required:
+            - type
+      description: Specific properties of long text fields
+    DateField:
+      title: DateField
+      allOf:
+        - $ref: '#/components/schemas/Field'
+        - type: object
+          description: Specific properties of date fields
+          properties:
+            type:
+              type: string
+              enum:
+                - date
+            format:
+              type: string
+              enum:
+                - ddmmyyy
+                - ddmmyy hhmm
+            before:
+              type: string
+            after:
+              type: string
+          required:
+            - type
+      description: Specific properties of date fields
+    HourField:
+      title: HourField
+      allOf:
+        - $ref: '#/components/schemas/Field'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - hour
+          required:
+            - type
+      description: Specific properties for hour fields
+    NumberField:
+      title: NumberField
+      allOf:
+        - $ref: '#/components/schemas/Field'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - number
+            digits:
+              type: integer
+            decimals:
+              type: integer
+            format:
+              type: string
+              enum:
+                - none
+                - combo
+                - radio
+          required:
+            - type
+      description: Specific properties for number fields
+    BooleanField:
+      title: BooleanField
+      allOf:
+        - $ref: '#/components/schemas/Field'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - boolean
+          required:
+            - type
+      description: Specific properties for boolean fields
+    Error:
+      title: Error
+      type: object
+      properties:
+        title:
+          type: string
+          description: 'A short, human-readable title for the general error type'
+        detail:
+          type: string
+          description: A human-readable description of the specific error
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+          description: Conveying the HTTP status code
+        type:
+          type: string
+          description: URL to a document describing the error condition
+        instance:
+          type: string
+          description: Unique URI for the specific error; this will often point to an error log for that specific response
+      required:
+        - title
+        - detail
+        - status
+      description: IETF RFC 7807 compliant JSON object to model problem details within HTTP responses
+    Solicitud:
+      title: Solicitud
+      type: object
+      properties:
+        id:
+          type: string
+        application:
+          type: string
+        template:
+          type: string
+        descriptionExt:
+          type: string
+        description:
+          type: string
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldGroup'
+        documentos:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentGroup'
+        from:
+          type: string
+        to:
+          type: string
+        subject:
+          type: string
+        ssubject:
+          type: string
+        pattern:
+          type: string
+        regorg:
+          type: string
+        book:
+          type: string
+        footer:
+          type: string
+        header:
+          type: string
+        destination:
+          type: string
+        tipoSolicitud:
+          type: string
+        name:
+          type: string
+        createConsent:
+          type: boolean
+        identLevel:
+          type: string
+        identTypes:
+          type: string
+        dboidCenso:
+          type: string
+        censoDesc:
+          type: string
+        censoOrg:
+          type: string
+        censoOrgDesc:
+          type: string
+        regUO:
+          type: string
+        regRole:
+          type: string
+        typeAvQj:
+          type: string
+    Street:
+      title: Street
+      type: object
+      properties:
+        dboid:
+          type: string
+        code:
+          type: string
+        acronym:
+          type: string
+        stname:
+          type: string
+        foncode:
+          type: string
+        type:
+          type: string
+        activerec:
+          type: string
+        sinonim:
+          type: string
+        aprobdate:
+          type: string
+        observation:
+          type: string
+        municipality:
+          type: string
+    Access:
+      title: Access
+      type: object
+      properties:
+        dboid:
+          type: string
+        num1:
+          type: string
+        num2:
+          type: string
+        dupli1:
+          type: string
+        dupli2:
+          type: string
+        indkm:
+          type: string
+        km:
+          type: string
+        indblock:
+          type: string
+        fblock:
+          type: string
+        shared:
+          type: boolean
+        accesstype:
+          type: string
+        toponimy:
+          type: string
+        aprobdate:
+          type: string
+        street:
+          $ref: '#/components/schemas/Street'
+        zipcode:
+          type: string
+    Address:
+      title: Address
+      type: object
+      properties:
+        dboid:
+          type: string
+        acces:
+          type: string
+        acronym:
+          type: string
+        stname:
+          type: string
+        num1:
+          type: string
+        num2:
+          type: string
+        dupli1:
+          type: string
+        dupli2:
+          type: string
+        indkm:
+          type: string
+        km:
+          type: string
+        indblock:
+          type: string
+        block:
+          type: string
+        stair:
+          type: string
+        floor:
+          type: string
+        door:
+          type: string
+        toponymy:
+          type: string
+        zipcode:
+          type: string
+        fulladdress:
+          type: string
+        orderbyadd:
+          type: string
+        munname:
+          type: string
+        provname:
+          type: string
+        cntryname:
+          type: string
+        address:
+          type: string
+        ment1NAME:
+          type: string
+        ment2NAME:
+          type: string
+        muncplty:
+          type: string
+        province:
+          type: string
+        country:
+          type: string
+        cntrycode:
+          type: string
+        provcode:
+          type: string
+        muncode:
+          type: string
+    Country:
+      title: Country
+      type: object
+      properties:
+        dboid:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        provcoded:
+          type: boolean
+        vatacronym:
+          type: string
+        nationality:
+          type: string
+        regcoded:
+          type: boolean
+    Province:
+      title: Province
+      type: object
+      properties:
+        dboid:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        muncoded:
+          type: boolean
+        activerec:
+          type: string
+        country:
+          $ref: '#/components/schemas/Country'
+    Municipality:
+      title: Municipality
+      type: object
+      properties:
+        dboid:
+          type: string
+        name:
+          type: string
+        code:
+          type: string
+        zipcode:
+          type: string
+        stdcoded:
+          type: boolean
+        goid:
+          type: string
+        mapid:
+          type: string
+        mslink:
+          type: string
+        stcodfa:
+          type: string
+        lpcoded:
+          type: integer
+        usefacpar:
+          type: string
+        activerec:
+          type: string
+        province:
+          $ref: '#/components/schemas/Province'
+    ValueVar:
+      title: ValueVar
+      type: object
+      properties:
+        value:
+          type: string
+        description:
+          type: string
+    AddressConstants:
+      type: object
+      properties:
+        stairs:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              label:
+                type: string
+        blocks:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              label:
+                type: string
+        doors:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              label:
+                type: string
+        acronyms:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              label:
+                type: string
+        floors:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              label:
+                type: string
+        nums:
+          type: array
+          items:
+            type: object
+            properties:
+              key:
+                type: string
+              label:
+                type: string
+        defaultValues:
+          $ref: '#/components/schemas/AddressConstantsDefaultValues'
+    Person:
+      title: Person
+      type: object
+      properties:
+        dboid:
+          type: string
+        name:
+          type: string
+        familyname:
+          type: string
+        secondname:
+          type: string
+        cianame:
+          type: string
+        fullname:
+          type: string
+        idnumber:
+          type: string
+        ctrldigit:
+          type: string
+        famnamepart:
+          type: string
+        secnamepart:
+          type: string
+        persontype:
+          type: string
+        addreses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        contacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Contact'
+        represented:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        onlyagent:
+          type: boolean
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoredDocument'
+        party:
+          $ref: '#/components/schemas/Address'
+        representedBy:
+          type: array
+          items:
+            $ref: '#/components/schemas/Person'
+        consents:
+          type: array
+          items:
+            $ref: '#/components/schemas/Consent'
+        clasificaciones:
+          type: string
+        sinonimos:
+          type: string
+    Consent:
+      title: Consent
+      type: object
+      properties:
+        dboid:
+          type: string
+        creationDate:
+          type: string
+        validityStartDate:
+          type: string
+        validityEndDate:
+          type: string
+        justification:
+          type: string
+        purpose:
+          type: string
+        status:
+          type: string
+        subject:
+          type: string
+        cud:
+          type: string
+        procName:
+          type: string
+        procDboid:
+          type: string
+    Contact:
+      title: Contact
+      type: object
+      properties:
+        waycode:
+          type: string
+        wayvalue:
+          type: string
+        lastModif:
+          type: string
+        default:
+          type: boolean
+        dboid:
+          type: string
+        waytype:
+          type: string
+        description:
+          type: string
+    StoredDocument:
+      title: StoredDocument
+      type: object
+      properties:
+        dboid:
+          type: string
+        cud:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+        date:
+          type: string
+        content:
+          type: string
+        url:
+          type: string
+        dateIni:
+          type: string
+        dateEnd:
+          type: string
+        cudConsent:
+          type: string
+    CreationRequest:
+      title: CreationRequest
+      type: object
+      properties:
+        person:
+          $ref: '#/components/schemas/Person'
+        variables:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoredDocument'
+    CreationResponse:
+      title: CreationResponse
+      type: object
+      properties:
+        id:
+          type: string
+        document:
+          $ref: '#/components/schemas/StoredDocument'
+    AddressConstantsDefaultValues:
+      title: AddressConstantsDefaultValue
+      type: object
+      properties:
+        country:
+          $ref: '#/components/schemas/Country'
+        province:
+          $ref: '#/components/schemas/Province'
+        municipality:
+          $ref: '#/components/schemas/Municipality'
+  securitySchemes: {}
